@@ -97,11 +97,11 @@ operating within the AWS free tier:
 
 ## 5. Applicable Laws and Regulations
 
-- NIST SP 800-53 Rev 5 = Security and Privacy Controls
-- NIST SP 800-37 Rev 2 = Risk Management Framework
-- FIPS 199 — Standards for Security Categorization
-- FIPS 200 — Minimum Security Requirements
-- OMB Circular A-130 — Managing Federal Information Resources
+- NIST SP 800-53 Rev 5 - Security and Privacy Controls
+- NIST SP 800-37 Rev 2 - Risk Management Framework
+- FIPS 199 - Standards for Security Categorization
+- FIPS 200 - Minimum Security Requirements
+- OMB Circular A-130 - Managing Federal Information Resources
 
 ---
 
