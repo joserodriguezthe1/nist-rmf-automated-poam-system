@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Lambda POAM Engine and EventBridge Rule
+
+Resources:
+  POAMEngineFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: poam-engine
+      Runtime: python3.12
+      Handler: poam_engine.handler
+      Role: !ImportValue IAMStack-LambdaExecutionRoleArn
+      Timeout: 60
+      Environment:
+        Variables:
+          POAM_TABLE: poam-records
+          EXPORT_BUCKET: !Sub 'poam-exports-${AWS::AccountId}'
+          RISK_HIGH_DAYS: '30'
+          RISK_MEDIUM_DAYS: '90'
+          RISK_LOW_DAYS: '180'
+          SNS_TOPIC_ARN: !Sub 'arn:aws:sns:${AWS::Region}:${AWS::AccountId}:poam-alerts'
+      Code:
+        S3Bucket: grc-cloudformation-artifacts
+        S3Key: lambda/poam_engine.zip
+      Tags:
+        - Key: Compliance
+          Value: NIST-RMF
+
+  SecurityHubFindingRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: poam-securityhub-trigger
+      Description: Trigger POAM engine on new Security Hub findings
+      EventPattern:
+        source:
+          - aws.securityhub
+        detail-type:
+          - Security Hub Findings - Imported
+        detail:
+          findings:
+            RecordState:
+              - ACTIVE
+            Workflow:
+              Status:
+                - NEW
+      Targets:
+        - Id: POAMEngineLambda
+          Arn: !GetAtt POAMEngineFunction.Arn
+
+  LambdaPermissionEventBridge:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref POAMEngineFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt SecurityHubFindingRule.Arn
+
+Outputs:
+  POAMEngineFunctionArn:
+    Value: !GetAtt POAMEngineFunction.Arn
+    Export:
+      Name: POAMEngineStack-FunctionArn

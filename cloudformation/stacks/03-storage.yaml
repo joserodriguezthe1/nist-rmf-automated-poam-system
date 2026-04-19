@@ -1,0 +1,48 @@
+Resources:
+  POAMTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: poam-records
+      BillingMode: PAY_PER_REQUEST   # Free tier friendly
+      AttributeDefinitions:
+        - AttributeName: poam_id
+          AttributeType: S
+        - AttributeName: control_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: poam_id
+          KeyType: HASH
+        - AttributeName: control_id
+          KeyType: RANGE
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Tags:
+        - Key: Compliance
+          Value: NIST-RMF
+        - Key: DataClassification
+          Value: Sensitive
+
+  POAMExportBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'poam-exports-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+Outputs:
+  POAMTableName:
+    Value: !Ref POAMTable
+    Export:
+      Name: !Sub '${AWS::StackName}-POAMTableName'

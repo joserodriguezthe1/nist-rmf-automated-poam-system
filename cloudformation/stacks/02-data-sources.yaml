@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Data Sources - GuardDuty
+
+Resources:
+
+  GuardDutyDetector:
+    Type: AWS::GuardDuty::Detector
+    Properties:
+      Enable: true
+      FindingPublishingFrequency: FIFTEEN_MINUTES
+
+Outputs:
+  GuardDutyDetectorId:
+    Value: !Ref GuardDutyDetector
+    Export:
+      Name: DataSourcesStack-GuardDutyDetectorId

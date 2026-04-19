@@ -1,0 +1,101 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: API Gateway and S3 Static Dashboard for POAM System
+
+Resources:
+
+  POAMAPIFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: poam-api-handler
+      Runtime: python3.12
+      Handler: poam_api.handler
+      Role: !ImportValue IAMStack-LambdaExecutionRoleArn
+      Timeout: 30
+      Environment:
+        Variables:
+          POAM_TABLE: poam-records
+      Code:
+        S3Bucket: grc-cloudformation-artifacts
+        S3Key: lambda/poam_engine.zip
+
+  DashboardBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'poam-dashboard-${AWS::AccountId}'
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+
+  DashboardBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref DashboardBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+            Resource:
+              - !Sub 'arn:aws:s3:::poam-dashboard-${AWS::AccountId}/*'
+
+  POAMRestAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: poam-api
+      Description: REST API for POAM dashboard
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  POAMsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref POAMRestAPI
+      ParentId: !GetAtt POAMRestAPI.RootResourceId
+      PathPart: poams
+
+  POAMsGETMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref POAMRestAPI
+      ResourceId: !Ref POAMsResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${POAMAPIFunction.Arn}/invocations'
+
+  LambdaPermissionAPIGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref POAMAPIFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${POAMRestAPI}/*/*'
+
+  APIDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: POAMsGETMethod
+    Properties:
+      RestApiId: !Ref POAMRestAPI
+      StageName: dev
+
+Outputs:
+  DashboardURL:
+    Value: !GetAtt DashboardBucket.WebsiteURL
+    Export:
+      Name: DashboardStack-DashboardURL
+
+  APIEndpoint:
+    Value: !Sub 'https://${POAMRestAPI}.execute-api.${AWS::Region}.amazonaws.com/dev'
+    Export:
+      Name: DashboardStack-APIEndpoint

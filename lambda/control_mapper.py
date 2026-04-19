@@ -1,0 +1,36 @@
+CONTROL_MAP = {
+    'IAM.1': 'AC-2',
+    'IAM.2': 'AC-2',
+    'IAM.3': 'IA-5',
+    'IAM.4': 'AC-2',
+    'IAM.5': 'IA-2',
+    'IAM.6': 'IA-2',
+    'IAM.7': 'IA-5',
+    'IAM.8': 'AC-2',
+    'S3.1': 'SC-7',
+    'S3.2': 'AC-3',
+    'S3.3': 'AC-3',
+    'S3.4': 'SC-28',
+    'S3.5': 'SC-7',
+    'EC2.1': 'SC-7',
+    'EC2.2': 'SC-7',
+    'EC2.3': 'SC-7',
+    'CloudTrail.1': 'AU-2',
+    'CloudTrail.2': 'AU-9',
+    'CloudTrail.4': 'AU-9',
+    'Config.1': 'CM-8',
+    'GuardDuty.1': 'SI-4',
+    'SecurityHub.1': 'CA-7',
+    'RDS.1': 'SC-28',
+    'RDS.2': 'SC-7',
+    'Lambda.1': 'CM-7',
+    'Lambda.2': 'CM-7',
+    'KMS.1': 'SC-12',
+    'KMS.2': 'SC-12',
+    'SSM.1': 'CM-6',
+    'SSM.2': 'CM-6',
+}
+
+
+def map_to_nist_control(control_id):
+    return CONTROL_MAP.get(control_id, 'CA-7')

@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: NIST RMF Automated POAM System
+
+Parameters:
+  NotificationEmail:
+    Type: String
+    Description: Email for POAM alerts
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, staging, prod]
+
+Resources:
+  IAMStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 'https://grc-cloudformation-artifacts.s3.us-east-1.amazonaws.com/stacks/01-iam-roles.yaml'
+
+  StorageStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: IAMStack
+    Properties:
+      TemplateURL: 'https://grc-cloudformation-artifacts.s3.us-east-1.amazonaws.com/stacks/03-storage.yaml'
+
+  POAMEngineStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: StorageStack
+    Properties:
+      TemplateURL: 'https://grc-cloudformation-artifacts.s3.us-east-1.amazonaws.com/stacks/04-poam-engine.yaml'
+
+  DataSourcesStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: IAMStack
+    Properties:
+      TemplateURL: 'https://grc-cloudformation-artifacts.s3.us-east-1.amazonaws.com/stacks/02-data-sources.yaml'
+
+  DashboardStack:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: POAMEngineStack
+    Properties:
+      TemplateURL: 'https://grc-cloudformation-artifacts.s3.us-east-1.amazonaws.com/stacks/05-api-dashboard.yaml'
