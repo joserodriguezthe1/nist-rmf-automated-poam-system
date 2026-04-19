@@ -213,7 +213,7 @@ operating within the AWS free tier:
 - AWS Security Hub continuously scans for vulnerabilities
 - GuardDuty monitors for threats and anomalies
 - Findings automatically risk-rated as HIGH/MEDIUM/LOW
-- Evidence: `poam_engine.py` — `get_milestone_date()` function
+- Evidence: `poam_engine.py` - `get_milestone_date()` function
 
 ### 6.8 System and Communications Protection (SC)
 
