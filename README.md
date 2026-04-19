@@ -65,18 +65,18 @@ DynamoDB      SNS
 
 ## AWS Services Used (Free Tier)
 
-| Service | Purpose |
+| Service | Purpose | Free Tier Limit |
 |---|---|---|
-| Lambda | POAM engine and API handler |
+| Lambda | POAM engine and API handler | 1M requests/month |
 | DynamoDB | POAM record storage | 25 GB |
-| EventBridge | Finding ingestion trigger |
-| API Gateway | REST API for dashboard |
+| EventBridge | Finding ingestion trigger | 1M events/month |
+| API Gateway | REST API for dashboard | 1M calls/month |
 | S3 | POAM exports and dashboard | 5 GB |
-| SNS | Email notifications |
-| Security Hub | Finding aggregation |
-| GuardDuty | Threat detection |
-| CloudTrail | Audit logging |
-| IAM | Access control |
+| SNS | Email notifications | 1M publishes/month |
+| Security Hub | Finding aggregation | 30-day free trial |
+| GuardDuty | Threat detection | 30-day free trial |
+| CloudTrail | Audit logging | 1 trail free |
+| IAM | Access control | Always free |
 
 ---
 
