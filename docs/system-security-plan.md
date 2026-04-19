@@ -16,7 +16,7 @@
 | System Abbreviation | APAS |
 | System Owner | (GRC Engineer) |
 | System Type | Major Application |
-| Operating Environment | Amazon Web Services (AWS) — us-east-1 |
+| Operating Environment | Amazon Web Services (AWS) - us-east-1 |
 | Authorization Boundary | AWS Account YOUR-AWS-ACCOUNT-ID |
 
 ---
@@ -97,8 +97,8 @@ operating within the AWS free tier:
 
 ## 5. Applicable Laws and Regulations
 
-- NIST SP 800-53 Rev 5 — Security and Privacy Controls
-- NIST SP 800-37 Rev 2 — Risk Management Framework
+- NIST SP 800-53 Rev 5 = Security and Privacy Controls
+- NIST SP 800-37 Rev 2 = Risk Management Framework
 - FIPS 199 — Standards for Security Categorization
 - FIPS 200 — Minimum Security Requirements
 - OMB Circular A-130 — Managing Federal Information Resources
@@ -109,20 +109,20 @@ operating within the AWS free tier:
 
 ### 6.1 Access Control (AC)
 
-**AC-2 — Account Management**
+**AC-2 - Account Management**
 - IAM roles follow least privilege principle
 - Lambda execution role restricted to specific DynamoDB table and S3 bucket
 - API Gateway role restricted to invoking poam-api-handler only
 - No shared credentials — all access via IAM roles
 - Evidence: `01-iam-roles.yaml`
 
-**AC-3 — Access Enforcement**
+**AC-3 - Access Enforcement**
 - DynamoDB access restricted to Lambda execution role only
 - S3 export bucket blocks all public access
 - IAM policies enforce allow-list of specific actions
 - Evidence: `01-iam-roles.yaml`
 
-**AC-17 — Remote Access**
+**AC-17 - Remote Access**
 - API Gateway provides controlled remote access to POAM data
 - No direct database access from external systems
 - All API calls logged via CloudWatch
@@ -130,78 +130,78 @@ operating within the AWS free tier:
 
 ### 6.2 Audit and Accountability (AU)
 
-**AU-2 — Event Logging**
+**AU-2 - Event Logging**
 - CloudTrail enabled for all management events
 - Lambda CloudWatch logs capture all POAM creation events
 - DynamoDB Streams capture all record changes
 - Evidence: `02-data-sources.yaml`
 
-**AU-9 — Protection of Audit Information**
+**AU-9 - Protection of Audit Information**
 - CloudTrail log file validation enabled
 - CloudTrail logs stored in dedicated S3 bucket
 - S3 bucket encryption enabled (AES-256)
 - Evidence: `02-data-sources.yaml`
 
-**AU-12 — Audit Record Generation**
+**AU-12 - Audit Record Generation**
 - Every POAM creation logged with timestamp, finding ID, control ID
 - CloudWatch Logs retention configured
 - Evidence: `poam_engine.py`
 
 ### 6.3 Security Assessment (CA)
 
-**CA-2 — Control Assessments**
+**CA-2 - Control Assessments**
 - AWS Security Hub continuously assesses controls against NIST SP 800-53
 - Assessment results automatically converted to POAMs
 - Evidence: Security Hub NIST standard enabled
 
-**CA-5 — Plan of Action and Milestones**
+**CA-5 - Plan of Action and Milestones**
 - Automated POAM generation is the primary function of this system
 - POAMs include: control ID, risk rating, milestone dates, responsible party
 - Evidence: `poam_engine.py`, DynamoDB `poam-records` table
 
-**CA-7 — Continuous Monitoring**
+**CA-7 - Continuous Monitoring**
 - EventBridge rule monitors Security Hub in real time
 - New findings automatically trigger POAM creation within minutes
 - Evidence: `04-poam-engine.yaml`
 
 ### 6.4 Configuration Management (CM)
 
-**CM-2 — Baseline Configuration**
+**CM-2 - Baseline Configuration**
 - All infrastructure defined as code in CloudFormation templates
 - Templates stored in version-controlled Git repository
 - Evidence: `root-stack.yaml` and all nested stacks
 
-**CM-6 — Configuration Settings**
+**CM-6 - Configuration Settings**
 - CloudFormation parameters enforce approved configuration values
 - Environment parameter restricts deployments to dev/staging/prod
 - Evidence: `root-stack.yaml`
 
-**CM-7 — Least Functionality**
+**CM-7 - Least Functionality**
 - Lambda functions restricted to minimum required permissions
 - No unnecessary services enabled
 - Evidence: `01-iam-roles.yaml`
 
-**CM-8 — System Component Inventory**
+**CM-8 - System Component Inventory**
 - All components defined and tracked in CloudFormation
 - CloudFormation stack provides real-time inventory
 - Evidence: CloudFormation console
 
 ### 6.5 Identification and Authentication (IA)
 
-**IA-2 — Identification and Authentication**
+**IA-2 - Identification and Authentication**
 - All AWS API calls authenticated via IAM
 - No anonymous access to sensitive resources
 - MFA recommended for all IAM users
 - Evidence: AWS IAM configuration
 
-**IA-5 — Authenticator Management**
+**IA-5 - Authenticator Management**
 - IAM roles use temporary credentials via STS
 - No long-term access keys used by Lambda functions
 - Evidence: `01-iam-roles.yaml`
 
 ### 6.6 Incident Response (IR)
 
-**IR-6 — Incident Reporting**
+**IR-6 - Incident Reporting**
 - GuardDuty detects and reports security incidents automatically
 - SNS notifications alert security team of HIGH severity findings
 - POAMs created automatically for all incidents
@@ -209,7 +209,7 @@ operating within the AWS free tier:
 
 ### 6.7 Risk Assessment (RA)
 
-**RA-5 — Vulnerability Monitoring and Scanning**
+**RA-5 - Vulnerability Monitoring and Scanning**
 - AWS Security Hub continuously scans for vulnerabilities
 - GuardDuty monitors for threats and anomalies
 - Findings automatically risk-rated as HIGH/MEDIUM/LOW
@@ -217,25 +217,25 @@ operating within the AWS free tier:
 
 ### 6.8 System and Communications Protection (SC)
 
-**SC-7 — Boundary Protection**
+**SC-7 - Boundary Protection**
 - S3 export bucket blocks all public access
 - DynamoDB not directly accessible from internet
 - API Gateway provides controlled boundary
 - Evidence: `03-storage.yaml`, `05-api-dashboard.yaml`
 
-**SC-12 — Cryptographic Key Establishment**
+**SC-12 - Cryptographic Key Establishment**
 - S3 buckets encrypted with AES-256 at rest
 - All data in transit encrypted via TLS (HTTPS)
 - Evidence: `03-storage.yaml`
 
-**SC-28 — Protection of Information at Rest**
+**SC-28 - Protection of Information at Rest**
 - DynamoDB data encrypted at rest by default
 - S3 buckets use server-side encryption (AES-256)
 - Evidence: `03-storage.yaml`
 
 ### 6.9 System and Information Integrity (SI)
 
-**SI-4 — System Monitoring**
+**SI-4 - System Monitoring**
 - GuardDuty provides continuous threat monitoring
 - CloudWatch monitors Lambda function health
 - EventBridge monitors finding ingestion pipeline
