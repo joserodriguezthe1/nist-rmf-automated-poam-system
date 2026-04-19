@@ -113,7 +113,7 @@ operating within the AWS free tier:
 - IAM roles follow least privilege principle
 - Lambda execution role restricted to specific DynamoDB table and S3 bucket
 - API Gateway role restricted to invoking poam-api-handler only
-- No shared credentials — all access via IAM roles
+- No shared credentials - all access via IAM roles
 - Evidence: `01-iam-roles.yaml`
 
 **AC-3 - Access Enforcement**
