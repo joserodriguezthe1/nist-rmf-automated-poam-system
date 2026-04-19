@@ -14,7 +14,7 @@ A fully automated Plan of Action and Milestones (POAM) system built on AWS
 that demonstrates practical NIST Risk Management Framework (RMF) 
 implementation. The system automatically ingests security findings from AWS 
 Security Hub and GuardDuty, maps them to NIST SP 800-53 controls, generates 
-POAMs, and notifies stakeholders — all within the AWS free tier.
+POAMs, and notifies stakeholders.
 
 ---
 
