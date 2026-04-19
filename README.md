@@ -39,14 +39,14 @@ DynamoDB      SNS
 
 ## Features
 
-- **Automated POAM generation** — new Security Hub findings automatically create POAMs within minutes
-- **NIST SP 800-53 control mapping** — findings mapped to control families (AC, AU, CA, CM, IA, IR, RA, SC, SI)
-- **Risk-based milestones** — HIGH (30 days), MEDIUM (90 days), LOW (180 days)
-- **REST API** — query POAMs programmatically via API Gateway
-- **Web dashboard** — visual POAM management interface
-- **Email alerts** — SNS notifications for HIGH severity POAMs
-- **Infrastructure as Code** — fully deployed via CloudFormation nested stacks
-- **Free tier** — runs entirely within AWS free tier limits
+- **Automated POAM generation** - new Security Hub findings automatically create POAMs within minutes
+- **NIST SP 800-53 control mapping** - findings mapped to control families (AC, AU, CA, CM, IA, IR, RA, SC, SI)
+- **Risk-based milestones** - HIGH (30 days), MEDIUM (90 days), LOW (180 days)
+- **REST API** - query POAMs programmatically via API Gateway
+- **Web dashboard** - visual POAM management interface
+- **Email alerts** - SNS notifications for HIGH severity POAMs
+- **Infrastructure as Code** - fully deployed via CloudFormation nested stacks
+- **Free tier** - runs entirely within AWS free tier limits
 
 ---
 
@@ -54,7 +54,7 @@ DynamoDB      SNS
 
 | RMF Step | Implementation |
 |---|---|
-| Categorize | FIPS 199 — Moderate impact (documented in SSP) |
+| Categorize | FIPS 199 - Moderate impact (documented in SSP) |
 | Select | NIST SP 800-53 standard enabled in Security Hub |
 | Implement | CloudFormation templates as baseline configuration evidence |
 | Assess | Security Hub continuous assessment against NIST controls |
@@ -124,22 +124,22 @@ poam-system/
 - Python 3.12
 - VS Code or any text editor
 
-### Step 1 — Create artifact bucket
+### Step 1 - Create artifact bucket
 ```bash
 aws s3 mb s3://YOUR-ARTIFACT-BUCKET-NAME
 ```
 
-### Step 2 — Package Lambda functions
+### Step 2 - Package Lambda functions
 ```powershell
 Compress-Archive -Path lambda\* -DestinationPath lambda\poam_engine.zip
 ```
 
-### Step 3 — Upload artifacts to S3
+### Step 3 - Upload artifacts to S3
 Upload the following to your artifact bucket:
 - `lambda/poam_engine.zip` → `YOUR-BUCKET/lambda/`
 - All yaml files from `cloudformation/stacks/` → `YOUR-BUCKET/stacks/`
 
-### Step 4 — Update configuration
+### Step 4 - Update configuration
 In `root-stack.yaml` replace all TemplateURL values with your bucket name:
 ```yaml
 TemplateURL: 'https://YOUR-BUCKET.s3.us-east-1.amazonaws.com/stacks/01-iam-roles.yaml'
@@ -150,20 +150,20 @@ In `index.html` replace the API URL:
 const API_URL = 'https://YOUR-API-GATEWAY-URL/dev/poams';
 ```
 
-### Step 5 — Deploy via CloudFormation console
-1. Go to AWS Console → CloudFormation → Create stack
+### Step 5 - Deploy via CloudFormation console
+1. Go to AWS Console - CloudFormation - Create stack
 2. Upload `root-stack.yaml`
 3. Enter stack name `poam-system`
 4. Enter your notification email
 5. Acknowledge IAM capabilities
 6. Click Submit
 
-### Step 6 — Enable Security Hub
-1. Go to Security Hub → Enable
+### Step 6 - Enable Security Hub
+1. Go to Security Hub - Enable
 2. Enable NIST SP 800-53 standard
 3. Enable AWS Foundational Security Best Practices
 
-### Step 7 — Test the system
+### Step 7 - Test the system
 Run a test finding via Lambda console using this test event:
 ```json
 {
@@ -258,5 +258,5 @@ Run a test finding via Lambda console using this test event:
 ---
 
 ## License
-MIT License — feel free to use this project as a reference for your own 
+MIT License - feel free to use this project as a reference for your own 
 GRC portfolio.
