@@ -1,5 +1,5 @@
 # NIST RMF Automated POAM System
-### AWS GRC Engineering Portfolio Project
+### AWS GRC Engineering Project
 
 ![AWS](https://img.shields.io/badge/AWS-Cloud-orange)
 ![NIST RMF](https://img.shields.io/badge/NIST-RMF-blue)
